@@ -56,6 +56,28 @@ body{background:var(--white);color:var(--ink);font-family:var(--ui)}
 .archive-tabs{display:flex;gap:8px;margin:0 0 14px}.archive-tab{border:1px solid #bbb;background:#fff;border-radius:999px;padding:9px 16px;font-weight:800;cursor:pointer}.archive-tab.on{background:#111;color:#fff;border-color:#111}.archive-tab .tab-count{display:inline-block;margin-left:5px;color:#ee5a29}.archive-tab.on .tab-count{color:#ff9a78}.doc-status.draft{background:#fff0d8;color:#8c5300}.draft-help{font-size:12px;color:#76685e;margin:-5px 0 18px}
 </style><style>
 .row .no{cursor:grab;user-select:none;display:flex;align-items:center;justify-content:center;gap:3px;height:100%}.row .no:active{cursor:grabbing}.drag-grip{font-size:12px;color:#a1aaa5;letter-spacing:-3px}.row.dragging{opacity:.42}.row.drag-before{box-shadow:inset 0 3px 0 #ee5a29}.row.drag-after{box-shadow:inset 0 -3px 0 #ee5a29}.drag-hint{color:#ee5a29!important;font-weight:700}
+</style><style>
+/* A4 인쇄 안정화: 프린터별 비인쇄 영역과 브라우저 배율 차이를 흡수합니다. */
+@media print{
+@page{size:A4 portrait;margin:40mm 12mm 15mm}
+@page:first{margin:12mm 12mm 15mm}
+html,body{width:auto!important;min-width:0!important;height:auto!important;margin:0!important;padding:0!important;overflow:visible!important;background:#fff!important}
+.preview,.pages{width:auto!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important;background:#fff!important}
+.paper{display:block!important;width:auto!important;max-width:none!important;min-width:0!important;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:none!important;overflow:visible!important;break-after:auto!important;page-break-after:auto!important;background:#fff!important}
+.paper.hide-print{display:none!important}
+.doc-head{padding-top:0!important;break-inside:avoid-page!important;page-break-inside:avoid!important}
+.doc-title{margin:8mm 0 7mm!important;break-after:avoid-page!important;page-break-after:avoid!important}
+.approval-print{width:64mm!important;max-width:100%!important;table-layout:fixed!important}
+.approval-print td{height:15mm!important}
+.money-line,.resolution-no{break-inside:avoid-page!important;page-break-inside:avoid!important}
+.doc-table{width:100%!important;max-width:100%!important;table-layout:fixed!important}
+.doc-table th,.doc-table td{padding:2.2mm 2.5mm!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+.doc-table tr{break-inside:avoid-page!important;page-break-inside:avoid!important}
+.doc-table thead{display:table-header-group!important}
+.details{min-height:24mm!important}
+.sign{padding-top:10mm!important;break-inside:avoid-page!important;page-break-inside:avoid!important}
+.stamp{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
 <body><section class="dashboard" id="dashboard"><header class="dash-nav"><div class="brand"><span class="mark">새</span><div><b>새마을원동</b><small>Accounting workspace</small></div></div><span class="dash-date" id="dashDate"></span></header><div class="dash-hero"><div class="dash-inner"><span class="eyebrow">SAEMAEUL WONDONG</span><h1>새마을 원동<br><em>회계 프로그램</em></h1><p>품의서 작성부터 실시간 집행내역, 저장 문서 관리까지 한곳에서 확인하세요.</p><div class="dash-stats"><div><small>저장 문서</small><b id="dashDocCount">0건</b></div><div><small>누적 품의 금액</small><b id="dashTotal">0원</b></div><div><small>결의번호 발급</small><b id="dashIssued">0건</b></div></div></div></div><div class="dash-menu"><button class="dash-card" onclick="showEditor()"><span class="dash-no">01</span><div><small>DOCUMENT</small><h2>품의서 작성하기</h2><p>지출 정보를 입력하고 품의서·결의서를 생성합니다.</p></div><b class="dash-arrow">→</b></button><button class="dash-card" onclick="location.href='새마을원동_예산관리.html'"><span class="dash-no">02</span><div><small>BUDGET</small><h2>실시간 집행내역</h2><p>항목별 예산과 품의 예정액, 집행액을 확인합니다.</p></div><b class="dash-arrow">→</b></button><button class="dash-card" onclick="openArchive()"><span class="dash-no">03</span><div><small>ARCHIVE</small><h2>문서함</h2><p>저장 문서를 불러오고 항목별 금액을 확인합니다.</p></div><b class="dash-arrow">→</b></button></div></section>
 <div class="app screen-hidden" id="editorApp"><header class="top"><div class="brand"><span class="mark">새</span><div><b>새마을원동</b><small>품의·결의서 출력 시스템 v2.1</small></div></div><div class="top-actions"><button class="btn ghost" onclick="showDashboard()">대시보드</button><span class="save-indicator" id="saveIndicator">임시저장 준비</span><button class="btn ghost" onclick="saveDraftDocument()">임시저장</button><button class="btn primary" onclick="saveAndResequence()">최종 저장</button><button class="btn ghost" onclick="openPreview('proposal')">품의서 미리보기</button></div></header>
